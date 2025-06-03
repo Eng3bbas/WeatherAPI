@@ -1,9 +1,8 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
-      dotnet: 8.0
+      dotnet: 9.0
   pre_build:
     commands:
       - echo Restore started on `date`
@@ -11,13 +10,12 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - dotnet build -c Release
+      - dotnet publish -c Release -o ./publish
   post_build:
     commands:
-      - echo Publish started on `date`
-      - dotnet publish -c Release -o ./publish
-
+      - echo Build completed on `date`
 artifacts:
   files:
     - '**/*'
   base-directory: publish
+  name: Weather-API-$(date +%Y-%m-%d)
