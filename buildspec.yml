@@ -1,10 +1,21 @@
 version: 0.2
 phases:
   install:
+    runtime-versions:
+      dotnet: latest
+  pre_build:
     commands:
-      - echo "Checking available .NET versions..."
-      - ls /usr/share/dotnet/sdk/
-      - dotnet --list-sdks
+      - echo Restore started on `date`
+      - dotnet restore
   build:
     commands:
-      - echo "Build phase"
+      - echo Build started on `date`
+      - dotnet publish -c Release -o ./publish
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - '**/*'
+  base-directory: publish
+  name: Weather-API-$(date +%Y-%m-%d)
