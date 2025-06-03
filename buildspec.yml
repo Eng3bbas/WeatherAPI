@@ -3,27 +3,33 @@ phases:
   install:
     commands:
       - echo "Installing .NET 9.0..."
+      # Remove any existing global.json that might conflict
+      - rm -f /codebuild/global.json
+      - rm -f global.json
+      # Download and install .NET 9.0
       - wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
       - chmod +x ./dotnet-install.sh
       - ./dotnet-install.sh --channel 9.0 --install-dir /usr/share/dotnet
+      # Set environment variables properly
       - export PATH="/usr/share/dotnet:$PATH"
       - export DOTNET_ROOT="/usr/share/dotnet"
-      - dotnet --version
+      # Verify installation
+      - /usr/share/dotnet/dotnet --version
   pre_build:
     commands:
-      - echo Restore started on `date`
+      - echo "Restore started on `date`"
       - export PATH="/usr/share/dotnet:$PATH"
       - export DOTNET_ROOT="/usr/share/dotnet"
-      - dotnet restore
+      - /usr/share/dotnet/dotnet restore
   build:
     commands:
-      - echo Build started on `date`
+      - echo "Build started on `date`"
       - export PATH="/usr/share/dotnet:$PATH"
       - export DOTNET_ROOT="/usr/share/dotnet"
-      - dotnet publish -c Release -o ./publish
+      - /usr/share/dotnet/dotnet publish -c Release -o ./publish
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo "Build completed on `date`"
 artifacts:
   files:
     - '**/*'
